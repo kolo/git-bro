@@ -1,0 +1,7 @@
+%h2
+  = @path
+- @objs.each do |obj|
+  %p
+    %a{:href => "master/#{obj[:name]}?sha=#{obj[:sha]}"}
+      = obj[:name]
+%a{:href => '/'} Home
