@@ -1,1 +1,10 @@
 git-bro - lightweight Sinatra based web application to track your local git repositories
+
+Currently git-bro is not released as a gem, so to use it:
+
+* git clone git://github.com/kolo/git-bro.git
+* cd git-bro
+* ruby -Ilib bin/git-bro [path to git repository]
+
+Dmitry Maksimov <dmtmax@gmail.com>
+http://github.com/kolo/git-bro
