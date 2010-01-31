@@ -1,4 +1,10 @@
-- objs.each do |obj|
-  %p
-    %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
-      = obj[:name]
+#files
+  - objs.each do |obj|
+    .item
+      %span.icon
+        - if obj[:type] == 'file'
+          %img{:src => '/images/file.png'}
+        - else
+          %img{:src => '/images/folder.png'}
+      %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
+        = obj[:name]

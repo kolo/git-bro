@@ -3,5 +3,11 @@
 %html{:xmlns => "http://www.w3.org/1999/xhtml"}
   %head
     %title Git-Bro - browse your repositories
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '/application.css'}
   %body
-    = yield
+    #wrapper
+      #header
+        %h1 Git-Bro
+    #content
+      = yield
+    #footer

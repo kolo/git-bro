@@ -23,10 +23,10 @@ module GitBro
       objs = []
       tree = @git.ls_tree(sha)
       tree['blob'].each do |k,v|
-        objs << {:name => k, :sha => v[:sha]}
+        objs << {:name => k, :sha => v[:sha], :type => 'file'}
       end
       tree['tree'].each do |k,v|
-        objs << {:name => k + '/', :sha => v[:sha]}
+        objs << {:name => k + '/', :sha => v[:sha], :type => 'dir'}
       end
 
       objs

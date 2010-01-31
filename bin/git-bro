@@ -3,6 +3,7 @@
 require 'git-bro'
 require 'sinatra'
 require 'haml'
+require 'sass'
 require 'git-bro/sinatra/helpers'
 
 begin
@@ -25,6 +26,7 @@ get '/' do
 end
 
 get '/:branch/*' do
+  puts params['splat']
   if params['splat'][0][-1..-1] == "/"
     # dir
     @path_prefix = params[:branch] + '/' + params['splat'][0]
@@ -36,4 +38,9 @@ get '/:branch/*' do
     @content = repository.file_content(params[:sha])
     haml :file_content
   end
+end
+
+get '/application.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  sass :application
 end
