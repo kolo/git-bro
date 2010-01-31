@@ -11,7 +11,7 @@ class GitBro
   end
 
   def path
-    @git.repo.path
+    @git.repo.path.gsub('.git','')
   end
 
   def first_level
@@ -37,6 +37,12 @@ class GitBro
   end
 end
 
+helpers do
+  def partial(template, options = {})
+    haml template, options.merge!(:layout => false)
+  end
+end
+
 begin
   if ARGV.size != 1
     puts 'USAGE: ruby git-bro <path to git repository>'
@@ -49,21 +55,17 @@ rescue ArgumentError
 end
 
 get '/' do
-  @path = git_bro.path.gsub('.git','')
+  @path = git_bro.path
   @objs = git_bro.first_level
   haml :index
 end
 
-# get '/:branch/:file/*' do
-#   @content = git_bro.get_file_content(params[:sha])
-#   haml :file_content
-# end
-
 get '/:branch/*' do
   if params['splat'][0][-1..-1] == "/"
     # dir
-    @path_prefix = params[:branch] + params['splat'][0]
-    @path = git_bro.path.gsub('.git','') + @path_prefix
+    @path_prefix = params[:branch] + '/' + params['splat'][0]
+    puts @path_prefix
+    @path = git_bro.path + @path_prefix
     @objs = git_bro.dir_listing(params[:sha])
     haml :dir_listing
   else

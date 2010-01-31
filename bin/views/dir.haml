@@ -1,0 +1,4 @@
+- objs.each do |obj|
+  %p
+    %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
+      = obj[:name]

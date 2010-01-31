@@ -1,7 +1,4 @@
 %h2
   = @path
-- @objs.each do |obj|
-  %p
-    %a{:href => "master/#{obj[:name]}?sha=#{obj[:sha]}"}
-      = obj[:name]
+= partial :dir, :locals => {:path_prefix => 'master/', :objs => @objs}
 %a{:href => '/'} Home
