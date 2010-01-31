@@ -1,62 +1,26 @@
 #! /usr/bin/ruby
 
-require 'rubygems'
+require 'git-bro'
 require 'sinatra'
-require 'git'
 require 'haml'
-
-class GitBro
-  def initialize(repo_path)
-    @git = Git.open(repo_path)
-  end
-
-  def path
-    @git.repo.path.gsub('.git','')
-  end
-
-  def first_level
-    sha = @git.log(1).first.sha
-    dir_listing(sha)
-  end
-
-  def get_file_content(sha)
-    @git.object(sha).contents
-  end
-
-  def dir_listing(sha)
-    objs = []
-    tree = @git.ls_tree(sha)
-    tree['blob'].each do |k,v|
-      objs << {:name => k, :sha => v[:sha]}
-    end
-    tree['tree'].each do |k,v|
-      objs << {:name => k + '/', :sha => v[:sha]}
-    end
-
-    objs
-  end
-end
-
-helpers do
-  def partial(template, options = {})
-    haml template, options.merge!(:layout => false)
-  end
-end
+require 'git-bro/sinatra/helpers'
 
 begin
   if ARGV.size != 1
     puts 'USAGE: ruby git-bro <path to git repository>'
     exit 1
   end
-  git_bro = GitBro.new(ARGV[0])
+  repository = GitBro::Repository.new(ARGV[0])
 rescue ArgumentError
   puts 'Cannot locate a repository in given path'
   exit 1
 end
 
+# Routes
+
 get '/' do
-  @path = git_bro.path
-  @objs = git_bro.first_level
+  @path = repository.path
+  @objs = repository.root
   haml :index
 end
 
@@ -64,13 +28,12 @@ get '/:branch/*' do
   if params['splat'][0][-1..-1] == "/"
     # dir
     @path_prefix = params[:branch] + '/' + params['splat'][0]
-    puts @path_prefix
-    @path = git_bro.path + @path_prefix
-    @objs = git_bro.dir_listing(params[:sha])
+    @path = repository.path + @path_prefix
+    @objs = repository.dir(params[:sha])
     haml :dir_listing
   else
     # file
-    @content = git_bro.get_file_content(params[:sha])
+    @content = repository.file_content(params[:sha])
     haml :file_content
   end
 end
