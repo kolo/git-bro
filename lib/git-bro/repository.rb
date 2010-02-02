@@ -1,32 +1,30 @@
-require 'git'
+require 'grit'
 
 module GitBro
   class Repository
     def initialize(repo_path)
-      @git = Git.open(repo_path)
+      @repo = Grit::Repo.new(repo_path)
     end
 
     def path
-      @git.repo.path.gsub('.git','')
+      @repo.path.gsub('.git','')
     end
 
     def root
-      sha = @git.log(1).first.sha
-      dir(sha)
+      tree(@repo.commits('master', 1).first.sha)
     end
 
     def file_content(sha)
-      @git.object(sha).contents
+      @repo.blob(sha).data
     end
 
-    def dir(sha)
+    def tree(sha)
       objs = []
-      tree = @git.ls_tree(sha)
-      tree['blob'].each do |k,v|
-        objs << {:name => k, :sha => v[:sha], :type => 'file'}
+      @repo.tree(sha).trees.each do |t|
+        objs << {:name => t.basename + '/', :sha => t.id, :type => 'dir'}
       end
-      tree['tree'].each do |k,v|
-        objs << {:name => k + '/', :sha => v[:sha], :type => 'dir'}
+      @repo.tree(sha).blobs.each do |b|
+        objs << {:name => b.basename, :sha => b.id, :type => 'file'}
       end
 
       objs

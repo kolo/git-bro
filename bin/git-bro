@@ -31,7 +31,7 @@ get '/:branch/*' do
     # dir
     @path_prefix = params[:branch] + '/' + params['splat'][0]
     @path = repository.path + @path_prefix
-    @objs = repository.dir(params[:sha])
+    @objs = repository.tree(params[:sha])
     haml :dir_listing
   else
     # file
