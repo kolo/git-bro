@@ -2,10 +2,12 @@
   %colgroup
     %col.icon
     %col.name
+    %col.age
     %col.message
   %tr
     %th
     %th name
+    %th age
     %th message
   - objs.each do |obj|
     %tr
@@ -17,4 +19,5 @@
       %td
         %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
           = obj[:name]
+      %td #{obj[:date]}        
       %td #{obj[:message]} (#{obj[:author]})

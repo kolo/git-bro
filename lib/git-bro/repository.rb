@@ -21,6 +21,7 @@ module GitBro
 
     def tree(prefix, sha)
       objs = []
+      cur_time = Time.now
       @repo.tree(sha).trees.each do |t|
         lc = last_commit(prefix + t.basename)
         objs << {
@@ -28,6 +29,7 @@ module GitBro
           :name => t.basename + '/',
           :sha => t.id,
           :author => lc.author.name,
+          :date => relative(cur_time - lc.date, lc.date),
           :message => shortify(lc.message)
         }
       end
@@ -38,6 +40,7 @@ module GitBro
           :name => b.basename,
           :sha => b.id,
           :author => lc.author.name,
+          :date => relative(cur_time - lc.date, lc.date),
           :message => shortify(lc.message)
         }
       end
@@ -53,7 +56,16 @@ module GitBro
     end
 
     def shortify(s)
-      s.length > 40 ? s[0..37] + '...' : s
+      s.length > 40 ? s[0..38] + '...' : s
+    end
+
+    def relative(diff, orig)
+      return "#{diff.to_i} seconds ago" if diff < 60
+      return "#{(diff/60).to_i} minutes ago" if diff < 3600
+      return "#{(diff/3600).to_i} hours ago" if diff < 86400
+      return "#{(diff/86400).to_i} days ago" if diff < 604800
+
+      orig.strftime("%B %d, %Y")
     end
 
   end
