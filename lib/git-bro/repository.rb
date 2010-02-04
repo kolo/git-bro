@@ -53,7 +53,7 @@ module GitBro
     end
 
     def shortify(s)
-      s.length > 20 ? s[0..17] + '...' : s
+      s.length > 40 ? s[0..37] + '...' : s
     end
 
   end
