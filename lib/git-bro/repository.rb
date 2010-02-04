@@ -3,6 +3,7 @@ require 'grit'
 module GitBro
   class Repository
     def initialize(repo_path)
+      @branch = 'master'
       @repo = Grit::Repo.new(repo_path)
     end
 
@@ -11,24 +12,49 @@ module GitBro
     end
 
     def root
-      tree(@repo.commits('master', 1).first.sha)
+      tree('',@repo.commits(@branch, 1).first.sha)
     end
 
     def file_content(sha)
       @repo.blob(sha).data
     end
 
-    def tree(sha)
+    def tree(prefix, sha)
       objs = []
       @repo.tree(sha).trees.each do |t|
-        objs << {:name => t.basename + '/', :sha => t.id, :type => 'dir'}
+        lc = last_commit(prefix + t.basename)
+        objs << {
+          :type => 'dir',
+          :name => t.basename + '/',
+          :sha => t.id,
+          :author => lc.author.name,
+          :message => shortify(lc.message)
+        }
       end
       @repo.tree(sha).blobs.each do |b|
-        objs << {:name => b.basename, :sha => b.id, :type => 'file'}
+        lc = last_commit(prefix + b.basename)
+        objs << {
+          :type => 'file',
+          :name => b.basename,
+          :sha => b.id,
+          :author => lc.author.name,
+          :message => shortify(lc.message)
+        }
       end
 
       objs
     end
-  end
 
+  protected
+    # TODO: Check what returns log function if there is dir and file with equal names
+    def last_commit(filename)
+      lc = @repo.log(@branch, filename, {:n => 1})
+      lc.empty? ? nil : lc.first
+    end
+
+    def shortify(s)
+      s.length > 20 ? s[0..17] + '...' : s
+    end
+
+  end
 end
