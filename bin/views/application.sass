@@ -5,22 +5,35 @@ body
 h2
   color: cornflowerblue
 
+a
+  color: #493796
+  text-decoration: none
+
 #content h2
   font-size: 1.2em
 
 #files
-  margin-bottom: 30px
-  border-bottom: 1px solid gray
-#files .item
-  border-left: 1px solid gray
-  border-top: 1px solid gray
-  border-right: 1px solid gray
-  border-bottom: 0px
-  padding: 5px 10px
+  width: 100%
+  border-collapse: collapse
+#files th
+  text-align: left
+  padding: 2px 5px
+  background-color: #B9D7D9
+  color: #2A2829
+  font-size: 0.8em
+#files tr
+  border: 1px solid #B9D7D9
+#files td
+  padding: 2px 5px
+  color: #668284
   font-size: 0.9em
-#files .item a
-  color: cornflowerblue
+
+#files .icon
+  width: 16px
+#files .age
+  width: 20%
+#files td a
   text-decoration: none
-#files .item .icon
-  padding: 0
-  vertical-align: top
+  color: #668284
+#files td a:hover
+  text-decoration: underline

@@ -1,10 +1,23 @@
-#files
+%table#files
+  %colgroup
+    %col.icon
+    %col.name
+    %col.age
+    %col.message
+  %tr
+    %th
+    %th name
+    %th age
+    %th message
   - objs.each do |obj|
-    .item
-      %span.icon
+    %tr
+      %td
         - if obj[:type] == 'file'
           %img{:src => '/images/file.png'}
         - else
           %img{:src => '/images/folder.png'}
-      %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
-        = obj[:name]
+      %td
+        %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
+          = obj[:name]
+      %td #{obj[:date]}        
+      %td #{obj[:message]} (#{obj[:author]})
