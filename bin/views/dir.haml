@@ -17,7 +17,7 @@
         - else
           %img{:src => '/images/folder.png'}
       %td
-        %a{:href => "/#{path_prefix}#{obj[:name]}?sha=#{obj[:sha]}"}
+        %a{:href => "#{@url_prefix}/#{obj[:name]}"}
           = obj[:name]
       %td #{obj[:date]}        
       %td #{obj[:message]} (#{obj[:author]})

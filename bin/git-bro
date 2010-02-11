@@ -17,27 +17,31 @@ rescue ArgumentError
   exit 1
 end
 
+
 # Routes
 
 get '/' do
-  @path = repository.path
-  @objs = repository.root
+  @branches = repository.branches
   haml :index
 end
 
-get '/:branch/*' do
-  puts params['splat']
-  if params['splat'][0][-1..-1] == "/"
-    # dir
-    @path_prefix = params[:branch] + '/' + params['splat'][0]
-    @path = repository.path + @path_prefix
-    @objs = repository.tree("#{params['splat'][0]}", params[:sha])
-    haml :dir_listing
-  else
-    # file
-    @content = repository.file_content(params[:sha])
-    haml :file_content
-  end
+get '/tree/:branch' do
+  @url_prefix = "/tree/#{params[:branch]}"
+  @path = "#{repository.name}/"
+  @objs = repository.tree(params[:branch], [])
+  haml :dir_listing
+end
+
+get '/tree/:branch/*/' do
+  @url_prefix = "/tree/#{params[:branch]}/#{params[:splat].first}"
+  @path = "#{repository.name}/#{params[:splat].first}/"
+  @objs = repository.tree(params[:branch], [].push(params[:splat].first + '/'))
+  haml :dir_listing
+end
+
+get '/tree/:branch/*' do
+  @content = repository.file_content(params[:branch], params[:splat].first)
+  haml :file_content
 end
 
 get '/application.css' do
