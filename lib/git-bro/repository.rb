@@ -2,28 +2,33 @@ require 'grit'
 
 module GitBro
   class Repository
+    attr_reader :name
+
     def initialize(repo_path)
-      @branch = 'master'
       @repo = Grit::Repo.new(repo_path)
+      @name = @repo.path.split('/')[-2]
     end
 
     def path
       @repo.path.gsub('.git','')
     end
 
-    def root
-      tree('',@repo.commits(@branch, 1).first.sha)
+    def file_content(branch, filepath)
+      blobs = @repo.tree(branch, [].push(filepath)).blobs
+      if blobs.size != 1
+        return 'FILE NOT FOUND'
+      end
+
+      blobs.first.data
     end
 
-    def file_content(sha)
-      @repo.blob(sha).data
-    end
-
-    def tree(prefix, sha)
+    def tree(branch, paths)
       objs = []
       cur_time = Time.now
-      @repo.tree(sha).trees.each do |t|
-        lc = last_commit(prefix + t.basename)
+      paths.empty? ? prefix = "" : prefix = paths.first
+
+      @repo.tree(branch, paths).trees.each do |t|
+        lc = last_commit(branch, prefix + t.basename)
         objs << {
           :type => 'dir',
           :name => t.basename + '/',
@@ -33,8 +38,8 @@ module GitBro
           :message => shortify(lc.message)
         }
       end
-      @repo.tree(sha).blobs.each do |b|
-        lc = last_commit(prefix + b.basename)
+      @repo.tree(branch, paths).blobs.each do |b|
+        lc = last_commit(branch, prefix + b.basename)
         objs << {
           :type => 'file',
           :name => b.basename,
@@ -48,10 +53,14 @@ module GitBro
       objs
     end
 
+    def branches
+      @repo.heads
+    end
+
   protected
     # TODO: Check what returns log function if there is dir and file with equal names
-    def last_commit(filename)
-      lc = @repo.log(@branch, filename, {:n => 1})
+    def last_commit(branch, filename)
+      lc = @repo.log(branch, filename, {:n => 1})
       lc.empty? ? nil : lc.first
     end
 

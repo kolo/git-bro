@@ -1,5 +1,4 @@
-%h2
-  = @path
-= partial :dir, :locals => {:path_prefix => 'master/', :objs => @objs}
-%p
-  %a{:href => '/'} Home
+%h2 Branches
+- @branches.each do |b|
+  %div
+    %a{:href => "/tree/#{b.name}"} #{b.name}
