@@ -17,6 +17,7 @@ rescue ArgumentError
   exit 1
 end
 
+set :charset => 'utf-8'
 
 # Routes
 
