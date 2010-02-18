@@ -6,6 +6,8 @@ require 'haml'
 require 'sass'
 require 'git-bro/sinatra/helpers'
 
+set :run, true
+
 begin
   if ARGV.size != 1
     puts 'USAGE: ruby git-bro <path to git repository>'
@@ -16,8 +18,6 @@ rescue ArgumentError
   puts 'Cannot locate a repository in given path'
   exit 1
 end
-
-set :charset => 'utf-8'
 
 # Routes
 
