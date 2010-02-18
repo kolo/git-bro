@@ -1,5 +1,3 @@
 %div#path
   - render_path(@path, params[:branch])
 = partial :dir, :locals => {:path_prefix => @url_prefix, :objs => @objs}
-%p
-  %a{:href => '/'} Home
