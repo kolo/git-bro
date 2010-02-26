@@ -1,0 +1,4 @@
+Usage: git-bro [--version] [--help] COMMAND [options]
+
+List of available commands:
+  git-bro serve PATH_TO_REPOSITORY - will serve the given repository

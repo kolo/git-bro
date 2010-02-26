@@ -1,51 +1,97 @@
-#! /usr/bin/ruby
+# == Synopsis
+#  git-bro - tool to manage GitBro application
+# # == Usage
+#  git-bro command [options]
+#  For help use: git-bro -h
+# == Options
+#  -h, --help        Displays help message
+#  -v, --version     Displays version, then exits
+# == Author
+# Dmitry Maksimov <dmtmax@gmail.com>
+# == Home page
+# http://github.com/kolo/git-bro
 
+require 'optparse'
+require 'ostruct'
+require 'rbconfig'
 require 'git-bro'
-require 'sinatra'
-require 'haml'
-require 'sass'
-require 'git-bro/sinatra/helpers'
 
-set :run, true
+module GitBro
+  TARGET_OS = Config::CONFIG['target_os']
+  require 'git-bro/process' if TARGET_OS == 'mswin32'
+end
 
-begin
-  if ARGV.size != 1
-    puts 'USAGE: ruby git-bro <path to git repository>'
-    exit 1
+class GitBroApp
+  attr_reader :options
+
+  def initialize(arguments)
+    @valid_commands = ['serve']
+    @arguments = arguments
   end
-  repository = GitBro::Repository.new(ARGV[0])
-rescue ArgumentError
-  puts 'Cannot locate a repository in given path'
-  exit 1
+
+  # parse options, check arguments, then process the command
+  def run
+    if parsed_options? and arguments_valid?
+      process_command
+    else
+      output_usage
+    end
+  end
+
+protected
+  def parsed_options?
+    return false if @arguments.empty?
+
+    opts = OptionParser.new
+    opts.on('-v', '--version'){output_version;exit 0}
+    opts.on('-h', '--help'){output_help;exit 0}
+
+    opts.parse!(@arguments) rescue return false
+
+    true
+  end
+
+  def arguments_valid?
+    return false if @arguments.empty?
+
+    @command = @arguments.delete_at(0)
+    return false unless @valid_commands.include?(@command)
+
+    res = case @command
+    when 'serve' then true if @arguments.size == 1
+    else false
+    end
+
+    true
+  end
+
+  def output_version
+    puts "#$0 vesrsion #{GitBro::VERSION}"
+  end
+
+  def output_help
+    output_version
+    File.readlines("#{File.dirname(__FILE__)}/short_help.txt").each {|l| puts l}
+  end
+
+  def output_usage
+    puts "Usage: git-bro [--version] [--help] COMMAND [options]"
+  end
+
+  def process_command
+    self.send("execute_#{@command}")
+  end
+
+  def execute_serve
+    repository_path = @arguments.first
+
+    case GitBro::TARGET_OS
+    when 'mswin32'
+      Process::create("ruby -I#{File.dirname(__FILE__)}/../lib #{File.dirname(__FILE__)}/server.rb #{repository_path}")
+    end
+  end
 end
 
-# Routes
+gb_app = GitBroApp.new(ARGV)
+gb_app.run
 
-get '/' do
-  @branches = repository.branches
-  haml :index
-end
-
-get '/tree/:branch' do
-  @url_prefix = "/tree/#{params[:branch]}"
-  @path = "#{repository.name}/"
-  @objs = repository.tree(params[:branch], [])
-  haml :dir_listing
-end
-
-get '/tree/:branch/*/' do
-  @url_prefix = "/tree/#{params[:branch]}/#{params[:splat].first}"
-  @path = "#{repository.name}/#{params[:splat].first}/"
-  @objs = repository.tree(params[:branch], [].push(params[:splat].first + '/'))
-  haml :dir_listing
-end
-
-get '/tree/:branch/*' do
-  @content = repository.file_content(params[:branch], params[:splat].first)
-  haml :file_content
-end
-
-get '/application.css' do
-  content_type 'text/css', :charset => 'utf-8'
-  sass :application
-end
