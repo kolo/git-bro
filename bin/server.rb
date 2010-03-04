@@ -1,5 +1,6 @@
 #! /usr/bin/ruby
 
+require 'rubygems'
 require 'git-bro'
 require 'sinatra'
 require 'haml'
@@ -13,9 +14,9 @@ begin
     puts 'USAGE: ruby git-bro <path to git repository>'
     exit 1
   end
-  repository = GitBro::Repository.new(ARGV[0])
+  repository = GitBro::Repository.new(File.expand_path(ARGV.first))
 rescue ArgumentError
-  puts 'Cannot locate a repository in given path'
+  puts "Cannot locate a repository in #{ARGV.first}"
   exit 1
 end
 

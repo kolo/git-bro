@@ -1,20 +1,10 @@
-# == Synopsis
-#  git-bro - tool to manage GitBro application
-# # == Usage
-#  git-bro command [options]
-#  For help use: git-bro -h
-# == Options
-#  -h, --help        Displays help message
-#  -v, --version     Displays version, then exits
-# == Author
-# Dmitry Maksimov <dmtmax@gmail.com>
-# == Home page
-# http://github.com/kolo/git-bro
+#! /usr/bin/ruby
 
 require 'optparse'
 require 'ostruct'
 require 'rbconfig'
 require 'git-bro'
+require 'git-bro/commands'
 
 module GitBro
   TARGET_OS = Config::CONFIG['target_os']
@@ -27,11 +17,15 @@ class GitBroApp
   def initialize(arguments)
     @valid_commands = ['serve']
     @arguments = arguments
+    @options = OpenStruct.new
+
+    @options.gem_path = File.expand_path(File.dirname(__FILE__)) + "/.."
   end
 
   # parse options, check arguments, then process the command
   def run
     if parsed_options? and arguments_valid?
+      process_arguments
       process_command
     else
       output_usage
@@ -39,8 +33,11 @@ class GitBroApp
   end
 
 protected
+  include GitBro::ServeCommand
+
   def parsed_options?
     return false if @arguments.empty?
+    @command = @arguments.delete_at(0)
 
     opts = OptionParser.new
     opts.on('-v', '--version'){output_version;exit 0}
@@ -52,21 +49,16 @@ protected
   end
 
   def arguments_valid?
-    return false if @arguments.empty?
-
-    @command = @arguments.delete_at(0)
     return false unless @valid_commands.include?(@command)
+    self.send("#{@command}_arguments_valid?")
+  end
 
-    res = case @command
-    when 'serve' then true if @arguments.size == 1
-    else false
-    end
-
-    true
+  def process_arguments
+    self.send("#{@command}_process_arguments")
   end
 
   def output_version
-    puts "#$0 vesrsion #{GitBro::VERSION}"
+    puts "#{GitBro::VERSION}"
   end
 
   def output_help
@@ -79,19 +71,15 @@ protected
   end
 
   def process_command
-    self.send("execute_#{@command}")
-  end
-
-  def execute_serve
-    repository_path = @arguments.first
-
-    case GitBro::TARGET_OS
-    when 'mswin32'
-      Process::create("ruby -I#{File.dirname(__FILE__)}/../lib #{File.dirname(__FILE__)}/server.rb #{repository_path}")
-    end
+    self.send("do_#{@command}")
   end
 end
 
-gb_app = GitBroApp.new(ARGV)
-gb_app.run
-
+begin
+  gb_app = GitBroApp.new(ARGV)
+  gb_app.run
+rescue SystemExit
+  # do nothing
+rescue Exception => e
+  puts e.message
+end
