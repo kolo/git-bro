@@ -1,10 +1,18 @@
-git-bro - lightweight Sinatra based web application to track your local git repositories
+git-bro - serve and browse your Git repositories
 
-Currently git-bro is not released as a gem, so to use it:
+You can install it as a gem
+  sudo gem install git-bro
 
-* git clone git://github.com/kolo/git-bro.git
-* cd git-bro
-* ruby -Ilib bin/git-bro [path to git repository]
+Or build from sources
+  git clone git://github.com/kolo/git-bro.git
+  cd git-bro
+  rake build
+  rake install
+
+Usage: git-bro [--version] [--help] COMMAND [ARGS]
+
+List of available commands:
+  serve  Serves current or specified directory
 
 Dmitry Maksimov <dmtmax@gmail.com>
 http://github.com/kolo/git-bro
