@@ -1,4 +1,3 @@
-require 'rubygems'
 require 'git-bro/repository'
 
 module GitBro
