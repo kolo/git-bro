@@ -1,3 +1,5 @@
+require 'rake'
+
 $:.unshift("lib")
 require "git-bro"
 
@@ -27,3 +29,22 @@ task :reinstall do
   system("sudo gem install --no-ri --no-rdoc pkg/git-bro-#{GitBro::VERSION}.gem")
 end
 
+require 'rake/testtask'
+Rake::TestTask.new do |test|
+  test.libs << 'lib' << 'test'
+  test.pattern = 'test/**/test_*.rb'
+  test.verbose = true
+end
+
+begin
+  require 'rcov/rcovtask'
+  Rcov::RcovTask.new do |test|
+    test.libs << 'test'
+    test.pattern = 'test/**/test_*.rb'
+    test.verbose = true
+  end
+rescue LoadError
+  task :rcov do
+    abort "Rcov is not available. Install it using: sudo gem install rcov"
+  end
+end

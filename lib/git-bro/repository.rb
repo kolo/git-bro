@@ -4,8 +4,8 @@ module GitBro
   class Repository
     attr_reader :name
 
-    def initialize(repo_path)
-      @repo = Grit::Repo.new(repo_path)
+    def initialize(repo_path, opts = nil)
+      @repo = Grit::Repo.new(repo_path, opts)
       @name = @repo.path.split('/')[-2]
     end
 

@@ -10,10 +10,7 @@ require 'git-bro/sinatra/helpers'
 set :run, true
 
 begin
-  if ARGV.size != 1
-    puts 'USAGE: ruby git-bro <path to git repository>'
-    exit 1
-  end
+  exit(1) if ARGV.size != 1
   repository = GitBro::Repository.new(File.expand_path(ARGV.first))
 rescue ArgumentError
   puts "Cannot locate a repository in #{ARGV.first}"
