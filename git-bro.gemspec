@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = %q{git-bro}
-  s.version = "0.0.1"
+  s.version = "0.1.0"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["Dmitry Maksimov"]
-  s.date = %q{2010-03-04}
+  s.date = %q{2010-03-23}
   s.default_executable = %q{git-bro}
   s.description = %q{Git-bro provides tools to serve your Git repositories}
   s.email = %q{dmtmax@gmail.com}
@@ -20,16 +20,7 @@ Gem::Specification.new do |s|
   s.files = [
     "README",
      "bin/git-bro",
-     "bin/public/images/file.png",
-     "bin/public/images/folder.png",
-     "bin/server.rb",
      "bin/short_help.txt",
-     "bin/views/application.sass",
-     "bin/views/dir.haml",
-     "bin/views/dir_listing.haml",
-     "bin/views/file_content.haml",
-     "bin/views/index.haml",
-     "bin/views/layout.haml",
      "git-bro.gemspec",
      "lib/git-bro.rb",
      "lib/git-bro/commands.rb",
@@ -37,7 +28,16 @@ Gem::Specification.new do |s|
      "lib/git-bro/process.rb",
      "lib/git-bro/repository.rb",
      "lib/git-bro/sinatra/helpers.rb",
-     "rakefile.rb"
+     "rakefile.rb",
+     "sinatra/app.rb",
+     "sinatra/public/images/file.png",
+     "sinatra/public/images/folder.png",
+     "sinatra/views/application.sass",
+     "sinatra/views/dir.haml",
+     "sinatra/views/dir_listing.haml",
+     "sinatra/views/file_content.haml",
+     "sinatra/views/index.haml",
+     "sinatra/views/layout.haml"
   ]
   s.homepage = %q{http://github.com/kolo/git-bro}
   s.rdoc_options = ["--charset=UTF-8"]

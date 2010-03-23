@@ -12,7 +12,7 @@ begin
     s.email = "dmtmax@gmail.com"
     s.homepage = "http://github.com/kolo/git-bro"
     s.authors = ["Dmitry Maksimov"]
-    s.files = FileList["[a-z]*", "[A-Z]*", "{bin,docs,lib,test}/**/*"]
+    s.files = FileList["[A-Z]*", "{bin,docs,lib,test,sinatra}/**/*"]
     s.add_dependency "grit"
     s.add_dependency "sinatra"
   end

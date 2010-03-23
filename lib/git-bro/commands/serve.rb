@@ -12,9 +12,9 @@ module GitBro
     def do_serve
       case GitBro::TARGET_OS
       when 'mswin32'
-        Process::create("ruby #{@options.gem_path}/bin/server.rb #{@options.repo_path}")
+        system "ruby #{@options.gem_path}/sinatra/app.rb #{@options.repo_path}"
       when 'linux'
-        system "/usr/bin/env ruby #{@options.gem_path}/bin/server.rb #{@options.repo_path}"
+        system "/usr/bin/env ruby #{@options.gem_path}/sinatra/app.rb #{@options.repo_path}"
       end
     end
   end
