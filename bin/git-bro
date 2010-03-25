@@ -47,7 +47,7 @@ protected
 
   def arguments_valid?
     @command = @arguments.delete_at(0)
-    
+
     return false unless @valid_commands.include?(@command)
     self.send("#{@command}_arguments_valid?")
   end
