@@ -15,5 +15,4 @@ class TestRepository < Test::Unit::TestCase
 
   def test_tree
   end
-end 
-
+end
