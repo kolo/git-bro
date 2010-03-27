@@ -6,6 +6,7 @@ require 'sinatra'
 require 'haml'
 require 'sass'
 require 'git-bro/sinatra/helpers'
+require 'json'
 
 set :run, true
 
@@ -25,16 +26,25 @@ get '/' do
 end
 
 get '/tree/:branch' do
-  @url_prefix = "/tree/#{params[:branch]}"
+  branch = params[:branch]
+
+  @url_prefix = "/tree/#{branch}"
   @path = "#{repository.name}/"
-  @objs = repository.tree(params[:branch], [])
+  @git_state = {:branch => branch, :path => ""}
+  @objs = repository.tree_objects(branch, [])
+
   haml :dir_listing
 end
 
 get '/tree/:branch/*/' do
-  @url_prefix = "/tree/#{params[:branch]}/#{params[:splat].first}"
-  @path = "#{repository.name}/#{params[:splat].first}/"
-  @objs = repository.tree(params[:branch], [].push(params[:splat].first + '/'))
+  branch = params[:branch]
+  path = params[:splat].first
+
+  @url_prefix = "/tree/#{branch}/#{path}"
+  @path = "#{repository.name}/#{path}/"
+  @git_state = {:branch => branch, :path => path}
+  @objs = repository.tree_objects(branch, [].push(path + '/'))
+
   haml :dir_listing
 end
 
@@ -46,4 +56,15 @@ end
 get '/application.css' do
   content_type 'text/css', :charset => 'utf-8'
   sass :application
+end
+
+get '/commits' do
+  if request.xhr?
+    commits = repository.commits_info(params[:branch], params[:path])
+
+    content_type :json
+    commits.to_json
+  else
+    redirect '/'
+  end
 end

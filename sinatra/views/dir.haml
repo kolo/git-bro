@@ -1,9 +1,24 @@
+:plain
+  <script>
+    GitBro.currentBranch = "#{@git_state[:branch]}";
+    GitBro.currentPath = "#{@git_state[:path]}"
+  </script>
+
+:javascript
+  $(function(){
+    $("#files tr:nth-child(2) td:last").text("Loading commit data...");
+
+    $.getJSON("/commits?branch=" + GitBro.currentBranch + "&path=" + GitBro.currentPath,
+      function(data){
+        $.each(data, function(sha){
+          tr = $("#" + sha).parent().parent();
+          tr.children()[2].textContent = this.age;
+          tr.children()[3].textContent = this.message + "(" + this.author + ")"
+        });
+      });
+  });
+
 %table#files
-  %colgroup
-    %col.icon
-    %col.name
-    %col.age
-    %col.message
   %tr
     %th
     %th name
@@ -11,13 +26,13 @@
     %th message
   - objs.each do |obj|
     %tr
-      %td
+      %td.icon
         - if obj[:type] == 'file'
           %img{:src => '/images/file.png'}
         - else
           %img{:src => '/images/folder.png'}
-      %td
-        %a{:href => "#{@url_prefix}/#{obj[:name]}"}
+      %td.name
+        %a{:href => "#{@url_prefix}/#{obj[:name]}", :id => obj[:sha]}
           = obj[:name]
-      %td.date #{obj[:date]}
-      %td #{obj[:message]} (#{obj[:author]})
+      %td.age
+      %td.message

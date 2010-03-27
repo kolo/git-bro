@@ -22,35 +22,46 @@ module GitBro
       blobs.first.data
     end
 
-    def tree(branch, paths)
-      objs = []
+    def commits_info(branch, path)
+      commits = {}
+
       cur_time = Time.now
-      paths.empty? ? prefix = "" : prefix = paths.first
+      paths = path.empty? ? [] : [].push(path + '/')
+      tree = @repo.tree(branch, paths)
 
-      @repo.tree(branch, paths).trees.each do |t|
-        lc = last_commit(branch, prefix + t.basename)
-        objs << {
-          :type => 'dir',
-          :name => t.basename + '/',
-          :sha => t.id,
+      tree.trees.each do |t|
+        lc = last_commit(branch, t.name)
+        commits[t.id.to_sym] = {
           :author => lc.author.name,
-          :date => relative(cur_time - lc.date, lc.date),
-          :message => shortify(lc.message)
-        }
-      end
-      @repo.tree(branch, paths).blobs.each do |b|
-        lc = last_commit(branch, prefix + b.basename)
-        objs << {
-          :type => 'file',
-          :name => b.basename,
-          :sha => b.id,
-          :author => lc.author.name,
-          :date => relative(cur_time - lc.date, lc.date),
+          :age => relative(cur_time - lc.date, lc.date),
           :message => shortify(lc.message)
         }
       end
 
-      objs
+      tree.blobs.each do |b|
+        lc = last_commit(branch, b.name)
+        commits[b.id.to_sym] = {
+          :author => lc.author.name,
+          :age => relative(cur_time - lc.date, lc.date),
+          :message => shortify(lc.message)
+        }
+      end
+
+      return commits
+    end
+
+    def tree_objects(branch, paths)
+      objects = []
+      tree = @repo.tree(branch, paths)
+
+      tree.trees.each do |t|
+        objects << { :type => 'dir', :name => t.basename + '/', :sha => t.id }
+      end
+      tree.blobs.each do |b|
+        objects << { :type => 'file', :name => b.basename, :sha => b.id }
+      end
+
+      return objects
     end
 
     def branches
@@ -65,7 +76,7 @@ module GitBro
     end
 
     def shortify(s)
-      s.length > 40 ? s[0..38] + '...' : s
+      s.length > 40 ? s[0..40] + '...' : s
     end
 
     def relative(diff, orig)
