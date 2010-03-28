@@ -7,6 +7,7 @@ module GitBro
     def initialize(repo_path, opts = nil)
       @repo = Grit::Repo.new(repo_path, opts)
       @name = @repo.path.split('/')[-2]
+      @cache = {}
     end
 
     def path
@@ -22,6 +23,24 @@ module GitBro
       blobs.first.data
     end
 
+    def get_commit_info(branch, object_id, object_name, current_time)
+      if @cache.has_key?(object_id)
+        commit_info = @cache[object_id]
+      else
+        lc = last_commit(branch, object_name)
+        commit_info = {
+          :author => lc.author.name,
+          :commit_time => lc.date,
+          :message => shortify(lc.message)
+        }
+        @cache[object_id] = commit_info
+      end
+
+      commit_info[:age] = relative(current_time - commit_info[:commit_time], commit_info[:commit_time])
+
+      return commit_info
+    end
+
     def commits_info(branch, path)
       commits = {}
 
@@ -30,21 +49,13 @@ module GitBro
       tree = @repo.tree(branch, paths)
 
       tree.trees.each do |t|
-        lc = last_commit(branch, t.name)
-        commits[t.id.to_sym] = {
-          :author => lc.author.name,
-          :age => relative(cur_time - lc.date, lc.date),
-          :message => shortify(lc.message)
-        }
+        object_id = t.id.to_sym
+        commits[object_id] = get_commit_info(branch, object_id, t.name, cur_time)
       end
 
       tree.blobs.each do |b|
-        lc = last_commit(branch, b.name)
-        commits[b.id.to_sym] = {
-          :author => lc.author.name,
-          :age => relative(cur_time - lc.date, lc.date),
-          :message => shortify(lc.message)
-        }
+        object_id = b.id.to_sym
+        commits[object_id] = get_commit_info(branch, object_id, b.name, cur_time)
       end
 
       return commits
@@ -55,10 +66,12 @@ module GitBro
       tree = @repo.tree(branch, paths)
 
       tree.trees.each do |t|
-        objects << { :type => 'dir', :name => t.basename + '/', :sha => t.id }
+        object_info = { :type => 'dir', :name => t.basename + '/', :sha => t.id, :commit_info => @cache[t.id.to_sym] }
+        objects.push(object_info)
       end
       tree.blobs.each do |b|
-        objects << { :type => 'file', :name => b.basename, :sha => b.id }
+        object_info = { :type => 'file', :name => b.basename, :sha => b.id, :commit_info => @cache[b.id.to_sym] }
+        objects.push(object_info)
       end
 
       return objects

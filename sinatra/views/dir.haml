@@ -35,4 +35,6 @@
         %a{:href => "#{@url_prefix}/#{obj[:name]}", :id => obj[:sha]}
           = obj[:name]
       %td.age
+        = obj[:commit_info][:age] if obj[:commit_info]
       %td.message
+        = obj[:commit_info][:message] if obj[:commit_info]
