@@ -6,7 +6,12 @@ module GitBro
 
     def initialize(repo_path, opts = nil)
       @repo = Grit::Repo.new(repo_path, opts)
-      @name = @repo.path.split('/')[-2]
+      @name = begin
+                dirs = @repo.path.split('/')
+                dirs.delete_at(dirs.size - 1) if dirs[-1] == '.git'
+                dirs[-1]
+              end
+
       @cache = {}
     end
 
