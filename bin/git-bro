@@ -8,7 +8,6 @@ require 'git-bro/commands'
 
 module GitBro
   TARGET_OS = Config::CONFIG['target_os']
-  require 'git-bro/process' if TARGET_OS == 'mswin32'
 end
 
 class GitBroApp
