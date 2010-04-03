@@ -1,0 +1,12 @@
+%div.commit_details
+  %div.sha
+    = @commit.sha
+  %div.message
+    = @commit.message
+  %div.author
+    = @commit.author.name
+  %div.age
+    = @commit.date.relative_to(Time.now)
+- @commit.diffs.each do |diff|
+  %div.Coderay
+    = highlight(diff.diff, :diff, false)

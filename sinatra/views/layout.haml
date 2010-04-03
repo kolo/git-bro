@@ -5,6 +5,7 @@
   %head
     %title Git-Bro - browse your repositories
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '/application.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '/coderay.css'}
     %script{:type => 'text/javascript', :src => '/js/jquery-1.4.2.js'}
     %script{:type => 'text/javascript', :src => '/js/application.js'}
   %body
@@ -14,6 +15,7 @@
           %a{:href => "/"} Git-Bro
         %p browse your Git repositories
     #content
-      = yield
-    #footer
-      %a{:href => 'http://github.com/kolo/git-bro'}git-bro on Github
+:plain
+= yield
+#footer
+  %a{:href => 'http://github.com/kolo/git-bro'}git-bro on Github

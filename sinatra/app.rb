@@ -54,11 +54,6 @@ get '/tree/:branch/*' do
   haml :file_content
 end
 
-get '/application.css' do
-  content_type 'text/css', :charset => 'utf-8'
-  sass :application
-end
-
 get '/commits' do
   if request.xhr?
     commits = repository.commits_info(params[:branch], params[:path])
@@ -77,4 +72,21 @@ get '/commits/:branch' do
 
   @commits = repository.log(@branch, @page, @per_page)
   haml :commits
+end
+
+get '/commit/:sha' do
+  @commit = repository.commit(params[:sha])
+  haml :commit
+end
+
+# CSS files
+
+get '/application.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  sass :application
+end
+
+get '/coderay.css' do
+  content_type 'text/css', :charset => 'utf-8'
+  sass :coderay
 end

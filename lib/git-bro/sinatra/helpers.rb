@@ -1,3 +1,5 @@
+require 'coderay'
+
 helpers do
   def partial(template, options = {})
     haml template, options.merge!(:layout => false)
@@ -27,5 +29,9 @@ helpers do
 
       haml_tag :span, last_part
     end
+  end
+
+  def highlight(code, lang, line_numbers = true)
+    CodeRay.scan(code, lang).span(:css => :class, :line_numbers => line_numbers ? :inline : nil)
   end
 end
