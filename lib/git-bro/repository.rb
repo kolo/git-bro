@@ -86,6 +86,10 @@ module GitBro
       @repo.heads
     end
 
+    def log(branch, page, per_page = 20)
+      @repo.log(branch, nil, {:skip => page * per_page, :n => per_page})
+    end
+
   protected
     # TODO: Check what returns log function if there is dir and file with equal names
     def last_commit(branch, filename)

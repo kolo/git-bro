@@ -6,6 +6,7 @@ require 'sinatra'
 require 'haml'
 require 'sass'
 require 'git-bro/sinatra/helpers'
+require 'git-bro/sinatra/core_extensions'
 require 'json'
 
 set :run, true
@@ -67,4 +68,13 @@ get '/commits' do
   else
     redirect '/'
   end
+end
+
+get '/commits/:branch' do
+  @page = params[:page] ? params[:page].to_i : 0
+  @branch = params[:branch]
+  @per_page = 50
+
+  @commits = repository.log(@branch, @page, @per_page)
+  haml :commits
 end

@@ -1,0 +1,31 @@
+%h2 log
+- current_time = Time.now
+%table#commits
+  %tr
+    %th SHA
+    %th Age
+    %th Author
+    %th Message
+  - @commits.each do |commit|
+    %tr
+      %td.sha
+        %a{:href => "/commit/#{commit.sha}"} 
+          = commit.sha[0..7]
+      %td.age
+        = commit.date.relative_to(current_time)
+      %td.name
+        = commit.author.name
+      %td.message
+        = commit.message.shortify(80)
+%div.pagination
+  - if @page == 0
+    %span Newer
+  - else
+    - if @page == 1
+      %a{:href => "/commits/#{@branch}"} Newer
+    -else
+      %a{:href => "/commits/#{@branch}?page=#{@page - 1}"} Newer
+  - if @commits.size == @per_page
+    %a{:href => "/commits/#{@branch}?page=#{@page + 1}"} Older
+  - else
+    %span Older

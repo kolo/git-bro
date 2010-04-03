@@ -25,6 +25,10 @@ a:hover
 #header h1
   padding: 0
   margin: 0
+#header a
+  color: white
+#header a:hover
+  text-decoration: none
 
 #path
   font-size: 1.3em
@@ -37,31 +41,54 @@ a:hover
 
 /* FILES TABLE STYLES */
 
-#files
+table
   width: 100%
   border-collapse: collapse
-#files th
+table th
   text-align: left
   padding: 2px 5px
   background-color: #66A3D2
   color: #2A2829
   font-size: 0.8em
-#files tr
+table tr
   border: 1px solid #66A3D2
-#files td
+table td
   padding: 2px 5px
   font-size: 0.8em
 #files td.icon
   width: 16px
 #files td.name
-  width: 30%
+  width: 20%
 #files td.age
   width: 20%
-#files td a
+table td a
   text-decoration: none
-#files td a:hover
+table td a:hover
   text-decoration: underline
   color= !blue_clr
+
+#commits td.sha
+  font-family: monospace
+  width: 5%
+#commits td.age
+  width: 15%
+
+.pagination
+  padding: 10px 0
+  font-size: 0.8em
+.pagination span
+  padding: 3px 5px
+  border: 1px solid gray
+  color: gray
+  margin-right: 1px
+  font-weight: bold
+.pagination a
+  padding: 3px 5px
+  border: 1px solid
+  border-color= !blue_clr
+  font-weight: bold
+.pagination a:hover
+  text-decoration: none
 
 #footer
   margin-top: 20px

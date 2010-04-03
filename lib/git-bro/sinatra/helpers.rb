@@ -27,6 +27,5 @@ helpers do
 
       haml_tag :span, last_part
     end
-
   end
 end
