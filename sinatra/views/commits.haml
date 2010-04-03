@@ -1,4 +1,4 @@
-%h2 log
+= partial :menu, :locals => {:branch => @branch, :active => :commits}
 - current_time = Time.now
 %table#commits
   %tr

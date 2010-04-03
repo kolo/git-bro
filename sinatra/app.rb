@@ -27,30 +27,34 @@ Languages = {
 # Routes
 
 get '/' do
-  @branches = repository.branches
-  haml :index
+  @branch = repository.default_branch
+
+  set :branch, @branch
+  redirect "/tree/#{@branch}"
 end
 
 get '/tree/:branch' do
-  branch = params[:branch]
+  @branch = params[:branch]
 
-  @url_prefix = "/tree/#{branch}"
+  @url_prefix = "/tree/#{@branch}"
   @path = "#{repository.name}/"
-  @git_state = {:branch => branch, :path => ""}
-  @objs = repository.tree_objects(branch, [])
+  @git_state = {:branch => @branch, :path => ""}
+  @objs = repository.tree_objects(@branch, [])
 
+  set :branch, @branch
   haml :dir_listing
 end
 
 get '/tree/:branch/*/' do
-  branch = params[:branch]
+  @branch = params[:branch]
   path = params[:splat].first
 
-  @url_prefix = "/tree/#{branch}/#{path}"
+  @url_prefix = "/tree/#{@branch}/#{path}"
   @path = "#{repository.name}/#{path}/"
-  @git_state = {:branch => branch, :path => path}
-  @objs = repository.tree_objects(branch, [].push(path + '/'))
+  @git_state = {:branch => @branch, :path => path}
+  @objs = repository.tree_objects(@branch, [].push(path + '/'))
 
+  set :branch, @branch
   haml :dir_listing
 end
 
@@ -59,8 +63,9 @@ get '/tree/:branch/*' do
   filename = params[:splat].first
   @path = "#{repository.name}/#{filename}"
   @lang = Languages[File.extname(filename)]
-  @content = repository.file_content(params[:branch], filename)
+  @content = repository.file_content(@branch, filename)
 
+  set :branch, @branch
   haml :file_content
 end
 
@@ -79,12 +84,14 @@ get '/commits/:branch' do
   @page = params[:page] ? params[:page].to_i : 0
   @branch = params[:branch]
   @per_page = 50
-
   @commits = repository.log(@branch, @page, @per_page)
+
+  set :branch, @branch
   haml :commits
 end
 
 get '/commit/:sha' do
+  @branch = settings.branch
   @commit = repository.commit(params[:sha])
   haml :commit
 end

@@ -1,3 +1,4 @@
+= partial :menu, :locals => {:branch => @branch, :active => :browse}
 %div#path
-  - render_path(@path, params[:branch])
+  - render_path(@path, @branch)
 = partial :dir, :locals => {:path_prefix => @url_prefix, :objs => @objs}

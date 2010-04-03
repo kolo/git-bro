@@ -1,0 +1,13 @@
+%div.commit_details
+  %div.sha
+    - if link_sha
+      %a{:href => "/commit/#{commit.sha}"}
+        = commit.sha
+    - else
+      = commit.sha
+  %div.message
+    = commit.message
+  %div.author
+    = commit.author.name
+  %div.age
+    = commit.date.relative_to(Time.now)

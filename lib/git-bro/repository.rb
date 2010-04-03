@@ -94,6 +94,13 @@ module GitBro
       @repo.commit(sha)
     end
 
+    def default_branch
+      branches = @repo.heads.collect!{|h| h.name }
+      return "master" if branches.include?("master")
+
+      branches.first
+    end
+
   protected
     # TODO: Check what returns log function if there is dir and file with equal names
     def last_commit(branch, filename)

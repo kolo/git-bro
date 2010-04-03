@@ -1,0 +1,7 @@
+#menu
+  %a{:href => "/tree/#{branch}", :class => active == :browse ? "active" : ""} Browse
+  %a{:href => "/commits/#{branch}", :class => active == :commits ? "active" : ""} Commits
+  #branch_span
+    %span Branch:
+    %span#branch
+      = branch
