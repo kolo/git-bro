@@ -9,4 +9,4 @@
     = @commit.date.relative_to(Time.now)
 - @commit.diffs.each do |diff|
   %div.Coderay
-    = highlight(diff.diff, :diff, false)
+    = highlight(diff.diff, :diff, :tag => :span)

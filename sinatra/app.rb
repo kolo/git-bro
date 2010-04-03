@@ -19,6 +19,11 @@ rescue ArgumentError
   exit 1
 end
 
+Languages = {
+  '.rb' => :ruby,
+  '.gemspec' => :ruby
+}
+
 # Routes
 
 get '/' do
@@ -50,7 +55,12 @@ get '/tree/:branch/*/' do
 end
 
 get '/tree/:branch/*' do
-  @content = repository.file_content(params[:branch], params[:splat].first)
+  @branch = params[:branch]
+  filename = params[:splat].first
+  @path = "#{repository.name}/#{filename}"
+  @lang = Languages[File.extname(filename)]
+  @content = repository.file_content(params[:branch], filename)
+
   haml :file_content
 end
 

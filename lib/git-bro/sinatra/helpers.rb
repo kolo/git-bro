@@ -31,7 +31,13 @@ helpers do
     end
   end
 
-  def highlight(code, lang, line_numbers = true)
-    CodeRay.scan(code, lang).span(:css => :class, :line_numbers => line_numbers ? :inline : nil)
+  def highlight(code, lang, options = nil)
+    options[:tag] = :div unless options[:tag]
+    case options[:tag]
+    when :div
+      html = CodeRay.scan(code, lang).div(:css => :class, :line_numbers => options[:line_numbers])
+    when :span
+      html = CodeRay.scan(code, lang).span(:css => :class, :line_numbers => options[:line_numbers])
+    end
   end
 end
