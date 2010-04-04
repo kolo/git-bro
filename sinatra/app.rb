@@ -19,6 +19,9 @@ rescue ArgumentError
   exit 1
 end
 
+set :branch, repository.default_branch
+set :branches, Proc.new{ repository.branches.collect!{|b| b.name} }
+
 Languages = {
   '.rb' => :ruby,
   '.gemspec' => :ruby

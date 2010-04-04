@@ -1,7 +1,23 @@
 #menu
-  %a{:href => "/tree/#{branch}", :class => active == :browse ? "active" : ""} Browse
-  %a{:href => "/commits/#{branch}", :class => active == :commits ? "active" : ""} Commits
-  #branch_span
-    %span Branch:
-    %span#branch
-      = branch
+  #top
+    %a{:href => "/tree/#{branch}", :class => active == :browse ? "active" : ""} Browse
+    %a{:href => "/commits/#{branch}", :class => active == :commits ? "active" : ""} Commits
+    #branch_span
+      %span Branch:
+      %span#branch #{branch} 
+  #switch_branch
+    - branches = settings.branches
+    %ul#dropdown
+      %li.headlink
+        %a{:href => "#"}
+          = "Switch Branches (#{branches.size})" + "&#9662;"
+        %ul
+          - branches.each do |b|
+            %li
+              - fbn = b.ljust(20).gsub(/\s/,"&nbsp;")
+              - if b == branch
+                = "&nbsp;&#10003" + fbn
+              - else
+                %a{:href => "/tree/#{b}"}
+                  = "&nbsp;&nbsp;" + fbn
+  .clear

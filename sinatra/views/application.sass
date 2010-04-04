@@ -111,18 +111,18 @@ table td a:hover
   margin-bottom: 10px
   font-size: 12px
   text-align: right
-#menu a
+#menu #top a
   background-color: #66A3D2
   padding: 5px 7px
   color: white
   font-weight: bold
   -moz-border-radius: 4px
   -webkit-border-radius: 4px
-#menu a.active
+#menu #top a.active
   background-color: white
   color: #66A3D2
   border: 1px solid #66A3D2
-#menu a:hover
+#menu #top a:hover
   text-decoration: none
 #menu #branch_span
   display: inline
@@ -130,14 +130,47 @@ table td a:hover
   color: white
   padding: 5px 0px 5px 5px
   margin-left: 10px
-#menu span
+#menu #top span
   border: 1px solid #66A3D2
   margin: 0
   font-weight: bold
-#menu span#branch
+#menu #top span#branch
   padding: 4px 7px
   background-color: white
   color: black
+  cursor: pointer
+#menu #top
+  margin-bottom: 5px
+
+.clear
+  clear: both
+
+#switch_branch
+  font-family: 'DejaVu Sans Mono', 'Bitstream Sans Mono', 'Courier New'
+  margin-top: 10px
+#dropdown, #dropdown li ul
+  list-style-type: none
+  margin: 0
+  padding: 0
+#dropdown li.headlink
+  border: 1px solid #66A3D2
+#dropdown li.headlink
+  float: right
+  padding: 5px 7px 5px 7px
+#dropdown li.headlink ul
+  margin-top: 5px
+  position: absolute
+  display: none
+#dropdown li.headlink ul li
+  background-color: #FFF
+  float: none
+  padding: 5px 7px
+  border: 1px solid #66A3D2
+  margin-bottom: 1px
+#dropdown li.headlink:hover ul
+  display: block
+#dropdown li a:hover
+  text-decoration: none
 
 #footer
   margin-top: 20px

@@ -1,3 +1,5 @@
+= partial :menu, :locals => {:branch => @branch, :active => nil}
 %div#path
   - render_path(@path, @branch)
-= highlight(@content, @lang, :line_numbers => @lang ? :inline : nil)
+:plain
+  #{highlight(@content, @lang, :line_numbers => @lang ? :inline : nil)}
