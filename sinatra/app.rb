@@ -20,7 +20,7 @@ rescue ArgumentError
 end
 
 set :branch, repository.default_branch
-set :branches, Proc.new{ repository.branches.collect!{|b| b.name} }
+set :branches, Proc.new{ repository.branches.collect!{|b| b.name}.sort }
 
 Languages = {
   '.rb' => :ruby,
@@ -43,9 +43,10 @@ get '/tree/:branch' do
   @path = "#{repository.name}/"
   @git_state = {:branch => @branch, :path => ""}
   @objs = repository.tree_objects(@branch, [])
+  @top_commit = repository.top_commit(@branch)
 
   set :branch, @branch
-  haml :dir_listing
+  haml :tree
 end
 
 get '/tree/:branch/*/' do
@@ -56,9 +57,10 @@ get '/tree/:branch/*/' do
   @path = "#{repository.name}/#{path}/"
   @git_state = {:branch => @branch, :path => path}
   @objs = repository.tree_objects(@branch, [].push(path + '/'))
+  @top_commit = repository.top_commit(@branch)
 
   set :branch, @branch
-  haml :dir_listing
+  haml :tree
 end
 
 get '/tree/:branch/*' do

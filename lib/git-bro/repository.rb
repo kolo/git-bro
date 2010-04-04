@@ -101,6 +101,10 @@ module GitBro
       branches.first
     end
 
+    def top_commit(branch)
+      @repo.commits(branch, 1).first
+    end
+
   protected
     # TODO: Check what returns log function if there is dir and file with equal names
     def last_commit(branch, filename)
