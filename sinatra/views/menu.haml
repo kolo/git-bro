@@ -16,7 +16,7 @@
             %li
               - fbn = b.ljust(20).gsub(/\s/,"&nbsp;")
               - if b == branch
-                = "&nbsp;&#10003" + fbn
+                = "&nbsp;&#10003;" + fbn
               - else
                 %a{:href => "/tree/#{b}"}
                   = "&nbsp;&nbsp;" + fbn

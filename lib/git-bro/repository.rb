@@ -36,12 +36,12 @@ module GitBro
         commit_info = {
           :author => lc.author.name,
           :commit_time => lc.date,
-          :message => shortify(lc.message)
+          :message => lc.message.shortify
         }
         @cache[object_id] = commit_info
       end
 
-      commit_info[:age] = relative(current_time - commit_info[:commit_time], commit_info[:commit_time])
+      commit_info[:age] = commit_info[:commit_time].relative_to(current_time)
 
       return commit_info
     end
@@ -111,19 +111,5 @@ module GitBro
       lc = @repo.log(branch, filename, {:n => 1})
       lc.empty? ? nil : lc.first
     end
-
-    def shortify(s)
-      s.length > 40 ? s[0..40] + '...' : s
-    end
-
-    def relative(diff, orig)
-      return "#{diff.to_i} seconds ago" if diff < 60
-      return "#{(diff/60).to_i} minutes ago" if diff < 3600
-      return "#{(diff/3600).to_i} hours ago" if diff < 86400
-      return "#{(diff/86400).to_i} days ago" if diff < 604800
-
-      orig.strftime("%B %d, %Y")
-    end
-
   end
 end

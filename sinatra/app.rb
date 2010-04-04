@@ -30,7 +30,7 @@ Languages = {
 # Routes
 
 get '/' do
-  @branch = repository.default_branch
+  @branch = settings.branch
 
   set :branch, @branch
   redirect "/tree/#{@branch}"
