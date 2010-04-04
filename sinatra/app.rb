@@ -6,7 +6,6 @@ require 'sinatra'
 require 'haml'
 require 'sass'
 require 'git-bro/sinatra/helpers'
-require 'git-bro/sinatra/core_extensions'
 require 'json'
 
 set :run, true
