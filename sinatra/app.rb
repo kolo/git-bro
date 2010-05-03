@@ -41,7 +41,7 @@ get '/tree/:branch' do
   @url_prefix = "/tree/#{@branch}"
   @path = "#{repository.name}/"
   @git_state = {:branch => @branch, :path => ""}
-  @objs = repository.tree_objects(@branch, [])
+  @objs = repository.tree(@branch, [])
   @top_commit = repository.top_commit(@branch)
 
   set :branch, @branch
@@ -55,7 +55,7 @@ get '/tree/:branch/*/' do
   @url_prefix = "/tree/#{@branch}/#{path}"
   @path = "#{repository.name}/#{path}/"
   @git_state = {:branch => @branch, :path => path}
-  @objs = repository.tree_objects(@branch, [].push(path + '/'))
+  @objs = repository.tree(@branch, [].push(path + '/'))
   @top_commit = repository.top_commit(@branch)
 
   set :branch, @branch

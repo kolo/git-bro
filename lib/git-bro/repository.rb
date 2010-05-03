@@ -66,7 +66,7 @@ module GitBro
       return commits
     end
 
-    def tree_objects(branch, paths)
+    def tree(branch, paths)
       objects = []
       tree = @repo.tree(branch, paths)
 
