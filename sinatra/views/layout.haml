@@ -5,10 +5,14 @@
   %head
     %title Git-Bro - browse your repositories
     %link{:rel => 'stylesheet', :type => 'text/css', :href => '/application.css'}
+    %link{:rel => 'stylesheet', :type => 'text/css', :href => '/coderay.css'}
+    %script{:type => 'text/javascript', :src => '/js/jquery-1.4.2.js'}
+    %script{:type => 'text/javascript', :src => '/js/application.js'}
   %body
     #wrapper
       #header
-        %h1 Git-Bro
+        %h1 
+          %a{:href => "/"} Git-Bro
         %p browse your Git repositories
     #content
       = yield

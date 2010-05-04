@@ -8,7 +8,6 @@ require 'git-bro/commands'
 
 module GitBro
   TARGET_OS = Config::CONFIG['target_os']
-  require 'git-bro/process' if TARGET_OS == 'mswin32'
 end
 
 class GitBroApp
@@ -36,12 +35,9 @@ protected
   include GitBro::ServeCommand
 
   def parsed_options?
-    return false if @arguments.empty?
-    @command = @arguments.delete_at(0)
-
     opts = OptionParser.new
-    opts.on('-v', '--version'){output_version;exit 0}
-    opts.on('-h', '--help'){output_help;exit 0}
+    opts.on('-v', '--version'){ output_version; exit 0 }
+    opts.on('-h', '--help'){ output_help; exit 0 }
 
     opts.parse!(@arguments) rescue return false
 
@@ -49,6 +45,8 @@ protected
   end
 
   def arguments_valid?
+    @command = @arguments.delete_at(0)
+
     return false unless @valid_commands.include?(@command)
     self.send("#{@command}_arguments_valid?")
   end
@@ -62,12 +60,14 @@ protected
   end
 
   def output_help
-    output_version
-    File.readlines("#{File.dirname(__FILE__)}/short_help.txt").each {|l| puts l}
+    output_usage
+    puts ""
+    puts "Available commands:"
+    puts "\s\s#{"serve".ljust(12)}Serve current or given folder"
   end
 
   def output_usage
-    puts "Usage: git-bro [--version] [--help] COMMAND [options]"
+    puts "Usage: git-bro [--version] [--help] COMMAND [ARGS]"
   end
 
   def process_command

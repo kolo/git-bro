@@ -1,0 +1,5 @@
+= partial :menu, :locals => {:branch => @branch, :active => nil}
+= partial :commit_details, :locals => {:commit => @commit, :link_sha => false}
+- @commit.diffs.each do |diff|
+  %div.Coderay
+    = highlight(diff.diff, :diff, :tag => :span)
