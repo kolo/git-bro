@@ -1,4 +1,5 @@
 require 'rake'
+require 'rake/rdoctask'
 
 $:.unshift("lib")
 require "git-bro"
@@ -17,6 +18,9 @@ begin
     s.files = FileList["[A-Z]*", "{bin,docs,lib,test,sinatra}/**/*"]
     s.add_dependency "grit"
     s.add_dependency "sinatra"
+    s.add_dependency "haml"
+    s.add_dependency "json"
+    s.add_dependency "coderay"
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install jeweler"
@@ -47,4 +51,10 @@ rescue LoadError
   task :rcov do
     abort "Rcov is not available. Install it using: sudo gem install rcov"
   end
+end
+
+Rake::RDocTask.new do |rd|
+  rd.rdoc_dir = 'docs'
+  rd.main = 'README.rdoc'
+  rd.rdoc_files.include 'README.rdoc', 'LICENSE'
 end
