@@ -18,7 +18,7 @@ class GitBroApp
     @arguments = arguments
     @options = OpenStruct.new
 
-    @options.gem_path = File.expand_path(File.dirname(__FILE__)) + "/.."
+    @options.gem_path = File.join(File.expand_path(File.dirname(__FILE__)), "/..")
   end
 
   # parse options, check arguments, then process the command

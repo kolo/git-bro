@@ -1,5 +1,3 @@
-require 'grit'
-
 module GitBro
   class Repository
     attr_reader :name

@@ -14,7 +14,7 @@ module GitBro
       when 'mswin32'
         system "ruby #{@options.gem_path}/sinatra/app.rb #{@options.repo_path}"
       when 'linux'
-        system "/usr/bin/env ruby #{@options.gem_path}/sinatra/app.rb #{@options.repo_path}"
+        system "/usr/bin/env ruby -I#{@options.gem_path}/lib #{@options.gem_path}/sinatra/app.rb #{@options.repo_path}"
       end
     end
   end

@@ -1,14 +1,16 @@
 #! /usr/bin/ruby
 
-require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:default)
+
 require 'git-bro'
-require 'sinatra'
-require 'haml'
-require 'sass'
 require 'git-bro/sinatra/helpers'
-require 'json'
+
+APP_PATH = File.expand_path(File.dirname(__FILE__))
 
 set :run, true
+set :public, File.join(APP_PATH, "public")
+set :views, File.join(APP_PATH, "views")
 
 begin
   exit(1) if ARGV.size != 1
