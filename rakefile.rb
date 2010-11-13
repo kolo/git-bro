@@ -6,6 +6,7 @@ require "git-bro"
 
 begin
   require 'jeweler'
+  require 'bundler'
   Jeweler::Tasks.new do |s|
     s.version = GitBro::VERSION
     s.name = 'git-bro'
@@ -16,11 +17,7 @@ begin
     s.homepage = "http://github.com/kolo/git-bro"
     s.authors = ["Dmitry Maksimov"]
     s.files = FileList["[A-Z]*", "{bin,docs,lib,test,sinatra}/**/*"]
-    s.add_dependency "grit"
-    s.add_dependency "sinatra"
-    s.add_dependency "haml"
-    s.add_dependency "json"
-    s.add_dependency "coderay"
+    s.add_bundler_dependencies
   end
 rescue LoadError
   puts "Jeweler, or one of its dependencies, is not available. Install it with: sudo gem install jeweler"

@@ -9,6 +9,10 @@ gem 'grit',    '~> 2.3'
 gem 'coderay', '~> 0.9.5'
 gem 'thin',    '~> 1.2'
 
+group :development do
+  gem 'jeweler', '~> 1.4'
+end
+
 group :test do
   gem 'mocha'
   gem 'rcov'
